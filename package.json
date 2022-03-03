@@ -1,0 +1,25 @@
+{
+   "name": "discordbot",
+   "version": "1.0.0",
+   "description": "",
+   "main": "dist/index.js",
+   "scripts": {
+      "start": "node .",
+      "build": "tsc",
+      "watch": "tsc -w",
+      "start:dev": "nodemon ."
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "devDependencies": {
+      "ts-node-dev": "^1.1.8",
+      "typescript": "^4.5.5"
+   },
+   "dependencies": {
+      "colors": "^1.4.0",
+      "discord.js": "^13.6.0",
+      "dotenv": "^16.0.0",
+      "moment": "^2.29.1"
+   }
+}

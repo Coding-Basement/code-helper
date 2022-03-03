@@ -1,0 +1,21 @@
+{
+   "red": 16711680,
+   "blue": 255,
+   "yellow": 16773120,
+
+   "light_blue": 38143,
+   "light_red": 16728642,
+   "dark_red": 8323072,
+   "green": 39168,
+   "lime": 65280,
+   "aqua": 65535,
+   "orange": 16738816,
+   "pink": 16711935,
+   "purple": 10027263,
+   "light_gray": 10526880,
+   "gray": 5263440,
+   "dark_gray": 3158064,
+
+   "black": 0,
+   "white": 16777214
+}
