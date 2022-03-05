@@ -40,7 +40,7 @@ export default new Event('messageReactionAdd', async (reaction, user) => {
       (emoji.name === codeExecutionEmoji &&
          reaction.count &&
          reaction.count > 1 &&
-         reaction.count < 3 &&
+         reaction.count < 2 &&
          users.cache.find((u) => u.id === bot.user?.id)) ||
       (await users.fetch()).find((u) => u.id === bot.user?.id)
    ) {
