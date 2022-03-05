@@ -1,9 +1,12 @@
-import { Permissions } from 'discord.js';
+import { Message, Permissions } from 'discord.js';
 import { bot } from '..';
 import { Event } from '../Structures/Event';
+import { languages } from '../data/codeexec/languages';
+import { codeExecutionEmoji } from '../config/emojis';
 
 export default new Event('messageCreate', (message) => {
    const { content } = message;
+   checkCodeExecution(message);
    if (
       message.author.bot ||
       !content.toLowerCase().startsWith(bot.prefix) ||
@@ -45,3 +48,14 @@ export default new Event('messageCreate', (message) => {
       message,
    });
 });
+
+async function checkCodeExecution(message: Message) {
+   const { content } = message;
+   if (content.startsWith('```') && message.content.endsWith('```')) {
+      const parsedMsg = content.slice(3, -3);
+      const code = parsedMsg.split('\n');
+      if (Object.keys(languages).includes(code[0].toLowerCase())) {
+         message.react(codeExecutionEmoji);
+      }
+   }
+}

@@ -110,6 +110,7 @@ export class ExtentedClient extends Client {
       this.on('ready', () => {
          this.registerDiscordSlashCommands({
             commands: slashCommands,
+            guildID: process.env.GUILD_ID,
          });
       });
    }

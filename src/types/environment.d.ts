@@ -12,6 +12,8 @@ declare global {
          GET_ROLES_CHANNEL_ID: string;
          DEVELOPER_EMOJI_ID: string;
          MENTION_DEVELOPER_EMOJI_ID: string;
+         RANNA_AUTH_USERNAME: string;
+         RANNA_AUTH_PASSWORD: string;
       }
    }
 }

@@ -1,0 +1,18 @@
+export const languages: { [language: string]: string } = {
+   js: 'nodejs',
+   javascript: 'nodejs',
+   java: 'java',
+   python: 'python3',
+   python3: 'python3',
+   py: 'python3',
+   bash: 'bash',
+   typescript: 'deno',
+   php: 'php',
+   cpp: 'cpp',
+   dart: 'dart',
+   go: 'golang',
+   kotlin: 'kotlin',
+   node: 'nodejs',
+   ruby: 'ruby',
+   rust: 'rust',
+};
