@@ -14,6 +14,7 @@ declare global {
          MENTION_DEVELOPER_EMOJI_ID: string;
          RANNA_AUTH_USERNAME: string;
          RANNA_AUTH_PASSWORD: string;
+         UPLOAD_KEY: string;
       }
    }
 }

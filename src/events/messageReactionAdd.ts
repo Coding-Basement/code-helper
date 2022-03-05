@@ -93,6 +93,51 @@ export default new Event('messageReactionAdd', async (reaction, user) => {
                   embeds: [embed],
                });
             } else {
+               if (executed.stdout.length > 3000) {
+                  let err = false;
+                  const haste = await axios
+                     .post(
+                        'https://uploads.mxgnus.de/api/haste/new',
+                        {
+                           haste: executed.stdout,
+                        },
+                        {
+                           headers: {
+                              Authorization: process.env.UPLOAD_KEY,
+                           },
+                        },
+                     )
+                     .catch((error) => {
+                        err = true;
+                     });
+                  if (err || !haste || !haste.data || !haste.data.url) {
+                     return codeMsg.edit('Es ist ein Fehler aufgetreten');
+                  }
+
+                  const embed = new MessageEmbed()
+                     .setTitle('Ausgabe')
+                     .setDescription(
+                        '**Code**\n' +
+                           '```' +
+                           code[0].toLowerCase() +
+                           '\n' +
+                           parsedCode +
+                           '\n```\n\n' +
+                           '**Stdout**: [Haste](' +
+                           haste.data.url +
+                           ')',
+                     )
+                     .setColor('#00ff00')
+                     .setFooter({
+                        text: `${lang.toUpperCase()} | Ausgeführt in ${
+                           executed.exectimems
+                        }ms`,
+                     });
+                  return codeMsg.edit({
+                     content: null,
+                     embeds: [embed],
+                  });
+               }
                const embed = new MessageEmbed()
                   .setTitle('Ergebnis')
                   .setDescription(
