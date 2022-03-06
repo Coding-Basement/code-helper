@@ -23,10 +23,7 @@ export default new Event('messageCreate', (message) => {
          return cmd.aliases?.includes(commandName) ? true : false;
       });
 
-   if (!command)
-      return message.channel.send({
-         embeds: [bot.functions.get('commandnotfound')?.execute({})],
-      });
+   if (!command) return;
    if (command.isDisabled)
       return message.channel.send({
          embeds: [bot.functions.get('commanddisabled')?.execute({})],
