@@ -16,6 +16,7 @@ declare global {
          RANNA_AUTH_PASSWORD: string;
          UPLOAD_KEY: string;
          AUTO_REACTION_CHANNELS: string;
+         CHANNEL_APPLICATIONS: string;
       }
    }
 }
