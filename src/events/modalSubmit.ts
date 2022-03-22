@@ -161,7 +161,7 @@ export default new Event(
             });
          }
 
-         const member = await bot.getMember(modal.user.id);
+         const member = await bot.getMember(application.userid);
 
          if (!member) {
             await modal.deferReply({
