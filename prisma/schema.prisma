@@ -25,3 +25,8 @@ model Application {
    closed                 Boolean  @default(value: false)
    declined               Boolean  @default(value: false)
 }
+
+model Config {
+   name  String  @unique
+   value Boolean
+}
