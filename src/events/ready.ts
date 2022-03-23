@@ -1,5 +1,6 @@
 import { Slash } from '@mxgnus/slashcommands.js';
 import { bot } from '..';
+import { initPrisma } from '../prisma/client';
 import { Event } from '../Structures/Event';
 import ConsoleLogger from '../utils/consolelogger';
 new Slash(bot, {
@@ -8,4 +9,5 @@ new Slash(bot, {
 
 export default new Event('ready', async () => {
    new ConsoleLogger('Logged in as ' + bot.user?.tag).info();
+   initPrisma();
 });

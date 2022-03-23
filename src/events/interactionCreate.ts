@@ -13,6 +13,7 @@ import discordModals, {
    TextInputComponent,
 } from 'discord-modals';
 import prisma from '../prisma/client';
+import ConsoleLogger from '../utils/consolelogger';
 discordModals(bot);
 
 export default new Event('interactionCreate', async (interaction) => {
@@ -37,8 +38,10 @@ export default new Event('interactionCreate', async (interaction) => {
             });
          }
       }
-
-      command.execute({
+      new ConsoleLogger(
+         `${interaction.member?.user.username}#${interaction.member?.user.discriminator} used slashcommand ${interaction.commandName}`,
+      ).info();
+      return command.execute({
          interaction: interaction as ExtendedInteraction,
          args: interaction.options as CommandInteractionOptionResolver,
       });
