@@ -1,11 +1,25 @@
 import { Modal, showModal, TextInputComponent } from 'discord-modals';
+import { MessageEmbed } from 'discord.js';
 import { bot } from '../..';
+import { getConfig } from '../../prisma/client';
 import { SlashCommand } from '../../Structures/SlashCommand';
 
 export default new SlashCommand({
    name: 'bewerben',
    description: 'Bewerbe dich für das Team',
    execute: async ({ interaction, args }) => {
+      const applyStatusConfig = await getConfig('applystatus');
+      if (!applyStatusConfig || !applyStatusConfig.value) {
+         const embed = new MessageEmbed()
+            .setTitle('Bewerbungsphase')
+            .setDescription('Die Bewerbungsphase ist momentan nicht aktiv.')
+            .setColor(bot.colors.red);
+         return interaction.reply({
+            embeds: [embed],
+            ephemeral: true,
+         });
+      }
+
       const nameAndAge = new TextInputComponent()
          .setCustomId('modal-apply-name-age')
          .setLabel('Wie heißt du?/Wie alt bist du?')
