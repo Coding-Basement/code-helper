@@ -44,16 +44,15 @@ export async function setupYoutubeNotifier() {
       }
 
       const embed = new MessageEmbed()
-         .setTitle(`${video.author.name} uploaded a new video`)
+         .setTitle(`${video.author.name} hat ein neues Video hochgeladen`)
          .setAuthor({
             name: video.author.name,
-            iconURL:
-               'https://uploads.mxgnus.de/uploads/images/2b92b0ca9c16559.png',
+            iconURL: 'https://uploads.mxgnus.de/uploads/images/d0b4c796.png',
             url: video.author.url,
          })
          .setURL(video.url)
          .setDescription(
-            `[${video.author.name}](${video.author.url}) upload a new video called ${video.title}`,
+            `[${video.author.name}](${video.author.url}) hat ein neues Video mit dem Namen ${video.title} hochgeladen!`,
          )
          .setImage(video.thumbnail)
          .setFields([
@@ -62,11 +61,11 @@ export async function setupYoutubeNotifier() {
                value: video.title,
             },
             {
-               name: 'Description',
+               name: 'Beschreibung',
                value: video.description,
             },
             {
-               name: 'Duration',
+               name: 'Länge',
                value: video.duration.timestamp,
             },
             {
