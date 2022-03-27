@@ -17,6 +17,9 @@ declare global {
          UPLOAD_KEY: string;
          AUTO_REACTION_CHANNELS: string;
          CHANNEL_APPLICATIONS: string;
+         YOUTUBE_CHANNEL_ID: string;
+         YOUTUBE_DISCORD_CHANNEL_ID: string;
+         PORT: number;
       }
    }
 }
