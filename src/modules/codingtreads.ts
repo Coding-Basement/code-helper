@@ -65,7 +65,6 @@ export async function sendThreadNotifyMessage({
          const newMessage = await channel.send({
             embeds: [embed],
          });
-         await newMessage.pin();
          await prisma.config.update({
             where: {
                name: 'threadNotifyMessageId',
@@ -76,13 +75,9 @@ export async function sendThreadNotifyMessage({
          });
       } else {
          await message.delete();
-         await channel
-            .send({
-               embeds: [embed],
-            })
-            .then((msg) => {
-               msg.pin();
-            });
+         await channel.send({
+            embeds: [embed],
+         });
       }
    }
 }
