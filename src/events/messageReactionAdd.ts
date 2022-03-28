@@ -17,7 +17,7 @@ export default new Event('messageReactionAdd', async (reaction, user) => {
       if (!msg || !msg.author.bot) return;
       const guildMember = await bot.getMember(user.id);
       if (!guildMember) return;
-      guildMember.roles.add(process.env.DEFAULT_ROLE_ID);
+      guildMember.roles.add(process.env.DEVELOPER_ROLE_ID);
    } else if (
       message.channelId === process.env.GET_ROLES_CHANNEL_ID &&
       (emoji.id === process.env.DEVELOPER_EMOJI_ID ||

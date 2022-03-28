@@ -9,7 +9,7 @@ export default new SlashCommand({
    description: 'Bewerbe dich für das Team',
    execute: async ({ interaction, args }) => {
       const applyStatusConfig = await getConfig('applystatus');
-      if (!applyStatusConfig || !applyStatusConfig.value) {
+      if (!applyStatusConfig || applyStatusConfig.value !== 'false') {
          const embed = new MessageEmbed()
             .setTitle('Bewerbungsphase')
             .setDescription('Die Bewerbungsphase ist momentan nicht aktiv.')

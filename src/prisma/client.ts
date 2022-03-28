@@ -14,7 +14,7 @@ async function createConfig(config: Config[]) {
       await prisma.config.create({
          data: {
             name: 'applystatus',
-            value: false,
+            value: 'false',
          },
       });
    }

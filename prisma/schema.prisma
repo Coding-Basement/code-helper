@@ -27,6 +27,19 @@ model Application {
 }
 
 model Config {
-   name  String  @unique
-   value Boolean
+   name  String @unique
+   value String
+}
+
+model HelpThread {
+   id                     String   @unique @db.VarChar(18)
+   userid                 String   @db.VarChar(18)
+   title                  String
+   problem                String   @db.Text
+   nodeversion            String
+   additionalinformations String?  @db.Text
+   createdat              DateTime @default(value: now())
+   updatedat              DateTime @default(value: now()) @updatedAt
+   closed                 Boolean  @default(value: false)
+   ispromoted             Boolean  @default(value: false)
 }

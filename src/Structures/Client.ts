@@ -18,7 +18,6 @@ import { SlashCommandType } from '../types/SlashCommand';
 
 export class ExtentedClient extends Client {
    public commands: Collection<string, MessageCommandType> = new Collection();
-   public functions: Collection<string, FunctionType> = new Collection();
    public slashCommands: Collection<string, SlashCommandType> =
       new Collection();
    public readonly token: string;
@@ -46,7 +45,6 @@ export class ExtentedClient extends Client {
       this.login(this.token);
       await this.registerSlashCommands();
       await this.registerMessageCommands();
-      await this.registerFunctions();
       await this.registerEvents();
    }
 
@@ -128,23 +126,10 @@ export class ExtentedClient extends Client {
       }
    }
 
-   public async registerFunctions() {
-      const functionsPath = path.resolve('dist', 'functions');
-      const functionFiles = readdirSync(functionsPath, {
-         withFileTypes: true,
-      }).filter((dirent) => dirent.isFile());
-      for (const file of functionFiles) {
-         const functionType: FunctionType = await this.importFile(
-            path.resolve(functionsPath, file.name),
-         );
-         this.functions.set(functionType.name, functionType);
-      }
-   }
-
    public async getGuild() {
       return (
          this.guilds.cache.get(process.env.GUILD_ID) ||
-         (await this.guilds.resolve(process.env.GUILD_ID))
+         (await this.guilds.fetch(process.env.GUILD_ID).catch(() => null))
       );
    }
 
@@ -159,21 +144,22 @@ export class ExtentedClient extends Client {
       if (!guild) return null;
       return (
          guild.channels.cache.get(channelId) ||
-         (await guild.channels.resolve(channelId))
+         (await guild.channels.fetch(channelId).catch(() => null))
       );
    }
 
    public async getMessage(messageId: string, channelId: string) {
       const channel = await this.getChannel(channelId);
       if (!channel || !channel.isText()) return null;
-      return await channel.messages.fetch(messageId);
+      return await channel.messages.fetch(messageId).catch(() => null);
    }
 
    public async getRole(roleId: string) {
       const guild = await this.getGuild();
       if (!guild) return null;
       return (
-         guild.roles.cache.get(roleId) || (await guild.roles.resolve(roleId))
+         guild.roles.cache.get(roleId) ||
+         (await guild.roles.fetch(roleId).catch(() => null))
       );
    }
 

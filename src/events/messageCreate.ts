@@ -1,8 +1,9 @@
-import { Message, Permissions } from 'discord.js';
+import { Message, MessageEmbed, Permissions } from 'discord.js';
 import { bot } from '..';
 import { Event } from '../Structures/Event';
 import { languages } from '../data/codeexec/languages';
 import { codeExecutionEmoji, noEmoji, yesEmoji } from '../config/emojis';
+import noPermission from '../functions/nopermission';
 
 export default new Event('messageCreate', (message) => {
    const { content } = message;
@@ -29,7 +30,14 @@ export default new Event('messageCreate', (message) => {
    if (!command) return;
    if (command.isDisabled)
       return message.channel.send({
-         embeds: [bot.functions.get('commanddisabled')?.execute({})],
+         embeds: [
+            new MessageEmbed()
+               .setTitle('> Fehler')
+               .setDescription('Dieser Befehl ist deaktiviert.')
+               .setColor(bot.colors.red)
+               .setFooter(bot.footer)
+               .setTimestamp(),
+         ],
       });
 
    if (command.permission) {
@@ -37,9 +45,9 @@ export default new Event('messageCreate', (message) => {
       if (!hasPermission)
          return message.channel.send({
             embeds: [
-               bot.functions
-                  .get('nopermission')
-                  ?.execute({ permission: command.permission }),
+               noPermission({
+                  permission: command.permission,
+               }),
             ],
          });
    }

@@ -24,11 +24,11 @@ export default new SlashCommand({
          },
          create: {
             name: 'applystatus',
-            value: status,
+            value: status.toString(),
          },
          update: {
             name: 'applystatus',
-            value: status,
+            value: status.toString(),
          },
       });
 

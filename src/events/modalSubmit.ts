@@ -230,6 +230,116 @@ export default new Event(
                      '>, du hast die Bewerbung abgelehnt, jedoch konnte ihm keine Nachricht zugestellt werden.',
                });
             });
+      } else if (modal.customId === 'modal-createthread') {
+         const threadName = modal.getTextInputValue('modal-createthread-name');
+         const threadProblem = modal.getTextInputValue(
+            'modal-createthread-problem',
+         );
+         const threadNodeVersion = modal.getTextInputValue(
+            'modal-createthread-nodeversion',
+         );
+         const threadAdditional = modal.getTextInputValue(
+            'modal-createthread-additional',
+         );
+
+         if (!threadName || !threadProblem || !threadNodeVersion) {
+            await modal.deferReply({
+               ephemeral: true,
+            });
+            return modal.followUp({
+               content:
+                  '<@' +
+                  modal.user.id +
+                  '>, du hast nicht alle notwendigen Felder ausgefüllt.',
+            });
+         }
+
+         const channel = await bot.getChannel(process.env.DISCORD_CODING_BETA);
+         if (!channel) {
+            await modal.deferReply({
+               ephemeral: true,
+            });
+            return modal.followUp({
+               content:
+                  '<@' +
+                  modal.user.id +
+                  '>, der Discord Kanal existiert nicht.',
+            });
+         }
+         if (channel.isThread() || !channel.isText()) {
+            await modal.deferReply({
+               ephemeral: true,
+            });
+            return modal.followUp({
+               content:
+                  '<@' +
+                  modal.user.id +
+                  '>, der Discord Kanal ist kein Text Channel.',
+            });
+         }
+
+         const thread = await channel.threads.create({
+            name: threadName,
+            reason: 'New coding help thread',
+         });
+         await thread.members.add(modal.user);
+
+         await prisma.helpThread.create({
+            data: {
+               id: thread.id,
+               problem: threadProblem,
+               nodeversion: threadNodeVersion,
+               additionalinformations: threadAdditional ?? null,
+               userid: modal.user.id,
+               title: threadName,
+            },
+         });
+
+         const threadEmbed = new MessageEmbed()
+            .setTitle('Neuer Thread')
+            .setAuthor({
+               name: modal.user.tag,
+               iconURL: modal.user.displayAvatarURL(),
+            })
+            .setDescription(
+               '**Thema:** `' +
+                  threadName +
+                  '`' +
+                  '\n**Node Version:** `' +
+                  threadNodeVersion +
+                  '`' +
+                  '\n\n**Problem**:' +
+                  '```\n' +
+                  threadProblem +
+                  '\n```' +
+                  '\n\n**Weitere Informationen**:' +
+                  '\n```\n' +
+                  (threadAdditional ?? 'N/A') +
+                  '\n```',
+            )
+            .setColor(bot.colors.light_blue)
+            .setTimestamp();
+
+         const threadMessage = await thread.send({
+            embeds: [threadEmbed],
+         });
+         await threadMessage.pin();
+
+         await modal.deferReply({
+            ephemeral: true,
+         });
+
+         return modal.followUp({
+            content:
+               '<@' +
+               modal.user.id +
+               '>, du hast ein neuen Thread erstellt mit dem Thema ' +
+               threadName +
+               '.\n\n<#' +
+               thread.id +
+               '>',
+            ephemeral: true,
+         });
       }
    },
 );

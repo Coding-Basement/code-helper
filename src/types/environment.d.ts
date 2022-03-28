@@ -4,7 +4,6 @@ declare global {
          NODE_ENV: 'development' | 'production';
          TOKEN: string;
          RULES_CHANNEL_ID: string;
-         DEFAULT_ROLE_ID: string;
          PREFIX: string;
          GUILD_ID: string;
          MENTION_DEVELOPER_ROLE_ID: string;
@@ -20,6 +19,8 @@ declare global {
          YOUTUBE_CHANNEL_ID: string;
          YOUTUBE_DISCORD_CHANNEL_ID: string;
          PORT: number;
+         DISCORD_CODING_BETA: string;
+         DISCORD_CODING_BETA_NOTIFY: string;
       }
    }
 }

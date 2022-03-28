@@ -1,5 +1,6 @@
 import { Slash } from '@mxgnus/slashcommands.js';
 import { bot } from '..';
+import { setupThreadManager } from '../modules/codingtreads';
 import { listen } from '../modules/webserver';
 import { setupYoutubeNotifier } from '../modules/ytnotify';
 import { initPrisma } from '../prisma/client';
@@ -12,6 +13,8 @@ new Slash(bot, {
 export default new Event('ready', async () => {
    new ConsoleLogger('Logged in as ' + bot.user?.tag).info();
    initPrisma();
-   await setupYoutubeNotifier();
-   listen();
+   setupThreadManager();
+   setupYoutubeNotifier().then(() => {
+      listen();
+   });
 });

@@ -14,6 +14,8 @@ import discordModals, {
 } from 'discord-modals';
 import prisma from '../prisma/client';
 import ConsoleLogger from '../utils/consolelogger';
+import commandNotFound from '../functions/commandnotfound';
+import noPermission from '../functions/nopermission';
 discordModals(bot);
 
 export default new Event('interactionCreate', async (interaction) => {
@@ -22,7 +24,7 @@ export default new Event('interactionCreate', async (interaction) => {
       if (!command) {
          return interaction.reply({
             ephemeral: true,
-            embeds: [bot.functions.get('commandnotfound')?.execute({})],
+            embeds: [commandNotFound()],
          });
       }
 
@@ -31,7 +33,7 @@ export default new Event('interactionCreate', async (interaction) => {
             return interaction.reply({
                ephemeral: true,
                embeds: [
-                  bot.functions.get('nopermission')?.execute({
+                  noPermission({
                      permission: command.permission,
                   }),
                ],
