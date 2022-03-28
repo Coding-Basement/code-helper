@@ -1,3 +1,4 @@
+import { Permissions } from 'discord.js';
 import { bot } from '../..';
 import prisma from '../../prisma/client';
 import { SlashCommand } from '../../Structures/SlashCommand';
@@ -39,7 +40,7 @@ export default new SlashCommand({
 
       if (
          dbThread.userid !== interaction.user.id ||
-         !interaction.memberPermissions?.has('ADMINISTRATOR')
+         interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)
       ) {
          return interaction.reply({
             content: 'Du hast keine Berechtigung diesen Thread zu schließen',
