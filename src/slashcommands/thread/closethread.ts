@@ -39,7 +39,7 @@ export default new SlashCommand({
       }
 
       if (
-         dbThread.userid !== interaction.user.id ||
+         dbThread.userid !== interaction.user.id &&
          !interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)
       ) {
          return interaction.reply({
