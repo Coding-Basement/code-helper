@@ -129,14 +129,23 @@ export class ExtentedClient extends Client {
    public async getGuild() {
       return (
          this.guilds.cache.get(process.env.GUILD_ID) ||
-         (await this.guilds.fetch(process.env.GUILD_ID).catch(() => null))
+         (await this.guilds.fetch(process.env.GUILD_ID).catch((e) => {
+            console.error(e);
+            return null;
+         }))
       );
    }
 
    public async getMember(userId: string) {
       const guild = await this.getGuild();
       if (!guild) return null;
-      return guild.members.cache.get(userId);
+      return (
+         guild.members.cache.get(userId) ||
+         (await guild.members.fetch(userId).catch((e) => {
+            console.error(e);
+            return null;
+         }))
+      );
    }
 
    public async getChannel(channelId: string) {
@@ -144,14 +153,20 @@ export class ExtentedClient extends Client {
       if (!guild) return null;
       return (
          guild.channels.cache.get(channelId) ||
-         (await guild.channels.fetch(channelId).catch(() => null))
+         (await guild.channels.fetch(channelId).catch((e) => {
+            console.error(e);
+            return null;
+         }))
       );
    }
 
    public async getMessage(messageId: string, channelId: string) {
       const channel = await this.getChannel(channelId);
       if (!channel || !channel.isText()) return null;
-      return await channel.messages.fetch(messageId).catch(() => null);
+      return await channel.messages.fetch(messageId).catch((e) => {
+         console.error(e);
+         return null;
+      });
    }
 
    public async getRole(roleId: string) {
@@ -159,7 +174,10 @@ export class ExtentedClient extends Client {
       if (!guild) return null;
       return (
          guild.roles.cache.get(roleId) ||
-         (await guild.roles.fetch(roleId).catch(() => null))
+         (await guild.roles.fetch(roleId).catch((e) => {
+            console.error(e);
+            return null;
+         }))
       );
    }
 

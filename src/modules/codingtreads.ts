@@ -29,12 +29,6 @@ export async function sendThreadNotifyMessage({
 }: {
    embed: MessageEmbed;
 }) {
-   const threadNotifyMessageId = await prisma.config.findUnique({
-      where: {
-         name: 'threadNotifyMessageId',
-      },
-   });
-
    const channel = await bot.getChannel(process.env.DISCORD_CODING_BETA_NOTIFY);
    if (!channel)
       return new ConsoleLogger(
@@ -45,40 +39,45 @@ export async function sendThreadNotifyMessage({
          'THREAD_MANAGER: Channel is not a text channel',
       ).error();
 
-   if (!threadNotifyMessageId) {
-      const message = await channel.send({
+   const threadNotificationMessageId = await prisma.config.findUnique({
+      where: {
+         name: 'threadNotificationMessageId',
+      },
+   });
+
+   const messages = await channel.messages.fetch();
+   const filteredMessages = messages.filter((msg) => {
+      if (msg.pinned) return false;
+      else if (msg.id === threadNotificationMessageId?.value) return false;
+      else return true;
+   });
+   await Promise.all(filteredMessages.map((msg) => msg.delete()));
+   const msg = await channel.messages
+      .fetch(threadNotificationMessageId?.value || '')
+      .catch(() => null);
+
+   if (msg) {
+      return await msg.edit({
          embeds: [embed],
       });
-      await prisma.config.create({
-         data: {
-            name: 'threadNotifyMessageId',
-            value: message.id,
+   } else {
+      const newmsg = await channel.send({
+         embeds: [embed],
+      });
+      await prisma.config.upsert({
+         where: {
+            name: 'threadNotificationMessageId',
+         },
+         create: {
+            name: 'threadNotificationMessageId',
+            value: newmsg.id,
+         },
+         update: {
+            name: 'threadNotificationMessageId',
+            value: newmsg.id,
          },
       });
-   } else {
-      const message = await bot.getMessage(
-         threadNotifyMessageId.value,
-         process.env.DISCORD_CODING_BETA_NOTIFY,
-      );
-
-      if (!message) {
-         const newMessage = await channel.send({
-            embeds: [embed],
-         });
-         await prisma.config.update({
-            where: {
-               name: 'threadNotifyMessageId',
-            },
-            data: {
-               value: newMessage.id,
-            },
-         });
-      } else {
-         await message.delete();
-         await channel.send({
-            embeds: [embed],
-         });
-      }
+      return;
    }
 }
 
@@ -110,7 +109,7 @@ export async function updateThreadNotifyMessage() {
       )
       .setColor(bot.colors.light_blue);
 
-   sendThreadNotifyMessage({
+   await sendThreadNotifyMessage({
       embed,
    });
 }

@@ -330,7 +330,7 @@ export default new Event(
             ephemeral: true,
          });
 
-         updateThreadNotifyMessage();
+         await updateThreadNotifyMessage();
 
          return modal.followUp({
             content:
