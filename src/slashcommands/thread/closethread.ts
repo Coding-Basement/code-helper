@@ -40,7 +40,7 @@ export default new SlashCommand({
 
       if (
          dbThread.userid !== interaction.user.id ||
-         interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)
+         !interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)
       ) {
          return interaction.reply({
             content: 'Du hast keine Berechtigung diesen Thread zu schließen',
