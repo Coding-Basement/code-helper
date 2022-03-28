@@ -1,5 +1,6 @@
 import { Permissions } from 'discord.js';
 import { bot } from '../..';
+import { updateThreadNotifyMessage } from '../../modules/codingtreads';
 import prisma from '../../prisma/client';
 import { SlashCommand } from '../../Structures/SlashCommand';
 
@@ -65,7 +66,9 @@ export default new SlashCommand({
       });
 
       setTimeout(() => {
-         channel.delete();
+         channel.delete().then(() => {
+            updateThreadNotifyMessage();
+         });
       }, 10000);
 
       return interaction.reply({

@@ -9,6 +9,7 @@ import {
    Permissions,
 } from 'discord.js';
 import prisma from '../prisma/client';
+import { updateThreadNotifyMessage } from '../modules/codingtreads';
 
 export default new Event(
    'modalSubmit' as any,
@@ -328,6 +329,8 @@ export default new Event(
          await modal.deferReply({
             ephemeral: true,
          });
+
+         updateThreadNotifyMessage();
 
          return modal.followUp({
             content:
