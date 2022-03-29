@@ -2,7 +2,7 @@ import { bot } from '../..';
 import { SlashCommand } from '../../Structures/SlashCommand';
 
 export default new SlashCommand({
-   name: 'joinedat',
+   name: 'joindate',
    description: 'Zeigt an, wann ein User dem Server beigetreten ist',
    options: [
       {

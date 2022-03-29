@@ -33,6 +33,7 @@ model Config {
 
 model HelpThread {
    id                     String   @unique @db.VarChar(18)
+   countid                Int      @id @default(value: autoincrement())
    userid                 String   @db.VarChar(18)
    title                  String
    problem                String   @db.Text

@@ -98,14 +98,17 @@ export async function updateThreadNotifyMessage() {
          if (!dbThread) return;
          const member = await bot.getMember(dbThread.userid);
          if (!member) return;
-         description += `**${dbThread.title} - ${member.user.tag}**\n<#${dbThread.id}>\n\n`;
+         description += `**${dbThread.countid}. ${dbThread.title} - ${member.user.tag}**\n<#${dbThread.id}>\n\n`;
       }),
    );
    const embed = new MessageEmbed()
       .setTitle('<:VerifiedDev:768097818430406686> Geöffnete Threads')
       .setDescription(
          '**Hier siehst du alle alle offenen Coding-Probleme Threads**\n\n' +
-            description,
+            description +
+            'Letztes update: <t:' +
+            Math.floor(Date.now() / 1000) +
+            ':f>',
       )
       .setColor(bot.colors.light_blue);
 
