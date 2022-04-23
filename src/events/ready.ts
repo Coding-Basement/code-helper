@@ -13,8 +13,8 @@ new Slash(bot, {
 export default new Event('ready', async () => {
    new ConsoleLogger('Logged in as ' + bot.user?.tag).info();
    initPrisma();
+   await setupThreadManager();
    setupYoutubeNotifier().then(async () => {
       listen();
-      await setupThreadManager();
    });
 });

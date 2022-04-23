@@ -17,16 +17,18 @@ export async function setupYoutubeNotifier() {
       secret: generateSecret(),
    });
    app.use(notificationEndpoint, notifier.listener());
-   notifier.subscribe(process.env.YOUTUBE_CHANNEL_ID);
+   subscribe(notifier);
 
    notifier.on('subscribe', (data: any) => {
-      console.log('Subscribed');
-      console.log(data);
+      console.log('Subscribed to channel ' + data.channel);
+
+      setTimeout(() => {
+         subscribe(notifier);
+      }, data.lease_seconds * 1000);
    });
 
    notifier.on('notified', async (data: any) => {
       console.log('New Video');
-      console.log(data);
       const video = await getVideoInformation(data.video.link);
       const channel = await bot.getChannel(
          process.env.YOUTUBE_DISCORD_CHANNEL_ID,
@@ -109,4 +111,8 @@ async function getVideoInformation(url: string) {
    const result = await yts(url);
    const video = result.videos[0];
    return video;
+}
+
+function subscribe(instance: any) {
+   instance.subscribe(process.env.YOUTUBE_CHANNEL_ID);
 }

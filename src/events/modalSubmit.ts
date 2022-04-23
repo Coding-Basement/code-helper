@@ -243,10 +243,11 @@ export default new Event(
             'modal-createthread-additional',
          );
 
+         await modal.deferReply({
+            ephemeral: true,
+         });
+
          if (!threadName || !threadProblem || !threadNodeVersion) {
-            await modal.deferReply({
-               ephemeral: true,
-            });
             return modal.followUp({
                content:
                   '<@' +
@@ -257,9 +258,6 @@ export default new Event(
 
          const channel = await bot.getChannel(process.env.DISCORD_CODING_BETA);
          if (!channel) {
-            await modal.deferReply({
-               ephemeral: true,
-            });
             return modal.followUp({
                content:
                   '<@' +
@@ -268,9 +266,6 @@ export default new Event(
             });
          }
          if (channel.isThread() || !channel.isText()) {
-            await modal.deferReply({
-               ephemeral: true,
-            });
             return modal.followUp({
                content:
                   '<@' +
@@ -296,6 +291,7 @@ export default new Event(
             },
          });
 
+         process.on('unhandledRejection', (reason, p) => {});
          const threadEmbed = new MessageEmbed()
             .setTitle('Neuer Thread')
             .setAuthor({
@@ -325,11 +321,6 @@ export default new Event(
             embeds: [threadEmbed],
          });
          await threadMessage.pin();
-
-         await modal.deferReply({
-            ephemeral: true,
-         });
-
          await updateThreadNotifyMessage();
 
          return modal.followUp({

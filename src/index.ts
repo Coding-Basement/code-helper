@@ -1,5 +1,9 @@
 import { ExtentedClient } from './Structures/Client';
 import 'dotenv/config';
+import {
+   GuildSlashCommand,
+   SlashcommandOption,
+} from '@mxgnus/slashcommands.js';
 
 export const bot = new ExtentedClient({
    intents: 32767,
