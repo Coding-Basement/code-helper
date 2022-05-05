@@ -10,6 +10,7 @@ export default new Event('messageCreate', (message) => {
 
    checkCodeExecution(message);
    autoReact(message);
+   codingThreads(message);
 
    if (
       message.author.bot ||
@@ -73,4 +74,8 @@ async function autoReact(message: Message) {
       await message.react(yesEmoji);
       await message.react(noEmoji);
    }
+}
+
+async function codingThreads(message: Message) {
+   if (message.channelId !== process.env.DISCORD_CODING_BETA) return;
 }

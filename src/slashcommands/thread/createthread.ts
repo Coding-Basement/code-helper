@@ -25,7 +25,7 @@ export default new SlashCommand({
          .setMaxLength(30);
       const problem = new TextInputComponent()
          .setLabel('Wie lautet dein Problem?')
-         .setMinLength(50)
+         .setMinLength(0)
          .setCustomId('modal-createthread-problem')
          .setStyle('LONG')
          .setRequired(true)

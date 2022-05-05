@@ -22,6 +22,11 @@ export async function fetchThreads() {
 
 export async function setupThreadManager() {
    await updateThreadNotifyMessage();
+   updateThreads();
+
+   setInterval(() => {
+      updateThreads();
+   }, 1000 * 60 * 5);
 }
 
 export async function sendThreadNotifyMessage({
@@ -114,5 +119,44 @@ export async function updateThreadNotifyMessage() {
 
    await sendThreadNotifyMessage({
       embed,
+   });
+}
+
+export async function updateThreads() {
+   const threads = await fetchThreads();
+   if (!threads) return;
+
+   threads.threads.forEach(async (thread) => {
+      const threadMessages = await thread.messages.fetch();
+      const sortedMessages = threadMessages.sort((a, b) => {
+         return a.createdAt.getTime() - b.createdAt.getTime();
+      });
+      const lastMessage = sortedMessages.last();
+      if (!lastMessage) return;
+      const now = new Date();
+      const lastMessageDate = new Date(lastMessage.createdAt);
+      const diff = now.getTime() - lastMessageDate.getTime();
+      const diffHours = Math.floor(diff / (1000 * 60 * 60));
+
+      if (diffHours > 5) {
+         const dbThread = await prisma.helpThread.findUnique({
+            where: {
+               id: thread.id,
+            },
+         });
+         if (!dbThread) return;
+
+         const embed = new MessageEmbed()
+            .setTitle(`Thread inaktiv`)
+            .setDescription(
+               'Wenn dein Problem gelöst wurde, verwende /closethread um den Thread zu schließen. Andersfalls benutzte /promotethread um auf den Thread aufmerksam zu machen oder beschreibe, was genau noch nicht funktioniert',
+            )
+            .setColor(bot.colors.aqua);
+
+         await thread.send({
+            embeds: [embed],
+            content: '<@' + dbThread.userid + '>',
+         });
+      }
    });
 }

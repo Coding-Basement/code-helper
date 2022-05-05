@@ -65,10 +65,9 @@ export default new SlashCommand({
          },
       });
 
-      setTimeout(() => {
-         channel.delete().then(() => {
-            updateThreadNotifyMessage();
-         });
+      setTimeout(async () => {
+         await channel.delete();
+         updateThreadNotifyMessage();
       }, 10000);
 
       return interaction.reply({
