@@ -12,7 +12,7 @@ datasource db {
 
 model Application {
    id                     Int      @unique @default(autoincrement())
-   userid                 String   @db.VarChar(18)
+   userid                 String   @db.VarChar(19)
    nameandage             String   @db.Text
    position               String   @db.Text
    mainquestion           String   @db.Text
@@ -20,7 +20,7 @@ model Application {
    additionalinformations String?  @db.Text
    createdat              DateTime @default(value: now())
    updatedat              DateTime @default(value: now()) @updatedAt
-   messageid              String   @unique @db.VarChar(18)
+   messageid              String   @unique @db.VarChar(19)
    accepted               Boolean  @default(value: false)
    closed                 Boolean  @default(value: false)
    declined               Boolean  @default(value: false)
@@ -32,9 +32,9 @@ model Config {
 }
 
 model HelpThread {
-   id                     String   @unique @db.VarChar(18)
+   id                     String   @unique @db.VarChar(19)
    countid                Int      @id @default(value: autoincrement())
-   userid                 String   @db.VarChar(18)
+   userid                 String   @db.VarChar(19)
    title                  String
    problem                String   @db.Text
    nodeversion            String
