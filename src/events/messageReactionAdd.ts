@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, MessageReaction } from 'discord.js';
 import { bot } from '..';
 import { codeExecutionEmoji } from '../config/emojis';
 import { languages } from '../data/codeexec/languages';
@@ -7,44 +7,56 @@ import { Event } from '../Structures/Event';
 import { executeCode } from '../utils/executecode';
 
 export default new Event('messageReactionAdd', async (reaction, user) => {
-   const { message, emoji, users } = reaction;
-   if (user.bot) return;
+   if (user.bot || !reaction) return;
    if (
-      message.channelId === process.env.RULES_CHANNEL_ID &&
-      emoji.name === '👍'
+      reaction.message.channelId === process.env.RULES_CHANNEL_ID &&
+      reaction.emoji.name === '👍'
    ) {
-      const msg = await bot.getMessage(message.id, message.channelId);
-      if (!msg || !msg.author.bot) return;
+      const msg = await bot.getMessage(
+         reaction.message.id,
+         reaction.message.channelId,
+      );
+      if (!msg) return;
+
       const guildMember = await bot.getMember(user.id);
       if (!guildMember) return;
-      guildMember.roles.add(process.env.DEVELOPER_ROLE_ID);
+
+      guildMember.roles.add(process.env.DEVELOPER_ROLE_ID).catch(console.error);
    } else if (
-      message.channelId === process.env.GET_ROLES_CHANNEL_ID &&
-      (emoji.id === process.env.DEVELOPER_EMOJI_ID ||
-         emoji.id === process.env.MENTION_DEVELOPER_EMOJI_ID)
+      reaction.message.channelId === process.env.GET_ROLES_CHANNEL_ID &&
+      (reaction.emoji.id === process.env.DEVELOPER_EMOJI_ID ||
+         reaction.emoji.id === process.env.MENTION_DEVELOPER_EMOJI_ID)
    ) {
-      const msg = await bot.getMessage(message.id, message.channelId);
-      if (!msg || !msg.author.bot) return;
-      if (emoji.id === process.env.DEVELOPER_EMOJI_ID) {
+      const msg = await bot.getMessage(
+         reaction.message.id,
+         reaction.message.channelId,
+      );
+      if (!msg) return;
+
+      if (reaction.emoji.id === process.env.DEVELOPER_EMOJI_ID) {
          const guildMember = await bot.getMember(user.id);
          if (!guildMember) return;
-         guildMember.roles.add(process.env.DEVELOPER_ROLE_ID).catch(() => {});
-      } else if (emoji.id === process.env.MENTION_DEVELOPER_EMOJI_ID) {
+
+         guildMember.roles
+            .add(process.env.DEVELOPER_ROLE_ID)
+            .catch(console.error);
+      } else if (reaction.emoji.id === process.env.MENTION_DEVELOPER_EMOJI_ID) {
          const guildMember = await bot.getMember(user.id);
          if (!guildMember) return;
+
          guildMember.roles
             .add(process.env.MENTION_DEVELOPER_ROLE_ID)
-            .catch(() => {});
+            .catch(console.error);
       }
    } else if (
-      (emoji.name === codeExecutionEmoji &&
+      (reaction.emoji.name === codeExecutionEmoji &&
          reaction.count &&
          reaction.count > 1 &&
          reaction.count < 2 &&
-         users.cache.find((u) => u.id === bot.user?.id)) ||
-      (await users.fetch()).find((u) => u.id === bot.user?.id)
+         reaction.users.cache.find((u) => u.id === bot.user?.id)) ||
+      (await reaction.users.fetch()).find((u) => u.id === bot.user?.id)
    ) {
-      const msg = await message.fetch();
+      const msg = await (reaction as MessageReaction).message.fetch();
       if (msg.content.startsWith('```') && msg.content.endsWith('```')) {
          const parsedMsg = msg.content.slice(3, -3);
          const code = parsedMsg.split('\n');
@@ -58,7 +70,9 @@ export default new Event('messageReactionAdd', async (reaction, user) => {
             }
          }
          if (lang) {
-            const codeMsg = await message.reply('Executing...');
+            const codeMsg = await (reaction as MessageReaction).message.reply(
+               'Executing...',
+            );
             const executed = await executeCode({
                language: lang,
                code: parsedCode,
