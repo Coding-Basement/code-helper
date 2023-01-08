@@ -1,4 +1,3 @@
-import { credentials } from './../config/ranna';
 import axios from 'axios';
 import { baseUrl } from '../config/ranna';
 
@@ -17,18 +16,10 @@ export async function executeCode({
 }) {
    let err = false;
    const response = await axios
-      .post<Result>(
-         baseUrl + '/v1/exec',
-         {
-            code,
-            language,
-         },
-         {
-            headers: {
-               Authorization: 'Basic ' + credentials,
-            },
-         },
-      )
+      .post<Result>(baseUrl + '/v1/exec', {
+         code,
+         language,
+      })
       .catch((error) => {
          err = true;
       });
