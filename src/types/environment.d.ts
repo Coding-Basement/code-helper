@@ -21,6 +21,8 @@ declare global {
          PORT: number;
          DISCORD_CODING_BETA: string;
          DISCORD_CODING_BETA_NOTIFY: string;
+         API_SECRET: string;
+         SUGGESTIONS_CHANNELS: string;
       }
    }
 }

@@ -11,6 +11,7 @@ export default new Event('messageCreate', (message) => {
    checkCodeExecution(message);
    autoReact(message);
    codingThreads(message);
+   createDiscussionThread(message);
 
    if (
       message.author.bot ||
@@ -74,6 +75,16 @@ async function autoReact(message: Message) {
       await message.react(yesEmoji);
       await message.react(noEmoji);
    }
+}
+
+async function createDiscussionThread(message: Message) {
+   if (!process.env.SUGGESTIONS_CHANNELS.includes(message.channelId)) return;
+   await message.startThread({
+      name: `Vorschlag von ${message.author.username}: ${message.content.slice(
+         0,
+         60,
+      )}${message.content.length > 60 ? '...' : ''}`,
+   });
 }
 
 async function codingThreads(message: Message) {
